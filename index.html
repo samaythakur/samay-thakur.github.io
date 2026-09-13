@@ -1,0 +1,964 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Portfolio — Samay Thakur</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@500;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+
+<style>
+/* ── BASE & PURE WHITE THEME ── */
+:root {
+  --bg-page: #ffffff;
+  --bg-card: #ffffff;
+  --border-color: #111111;
+  --text-primary: #000000;
+  --text-muted: #444444;
+  --font-sans: 'Inter', -apple-system, sans-serif;
+  --font-head: 'Space Grotesk', sans-serif;
+  --font-mono: 'Space Mono', monospace;
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: var(--bg-page);
+  color: var(--text-primary);
+  font-family: var(--font-sans);
+  line-height: 1.6;
+  font-size: 15px;
+  overflow-x: hidden;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+/* ── FULL WIDTH LAYOUT WITH COLLAPSIBLE SIDEBAR ── */
+.app-container {
+  display: flex;
+  min-height: 100vh;
+  width: 100%;
+}
+
+/* LEFT SIDEBAR (Collapsible) */
+.sidebar {
+  width: 280px;
+  min-width: 280px;
+  background: var(--bg-card);
+  border-right: 2px solid var(--border-color);
+  padding: 2.5rem 1.5rem;
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  z-index: 100;
+  transition: transform 0.3s ease, margin-left 0.3s ease;
+}
+
+.app-container.sidebar-closed .sidebar {
+  transform: translateX(-100%);
+}
+
+.sidebar-profile {
+  margin-bottom: 2rem;
+}
+
+.profile-avatar {
+  width: 100px;
+  height: 100px;
+  border: 2px solid var(--border-color);
+  background: #111111;
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-head);
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 1.25rem;
+}
+
+.sidebar-name {
+  font-family: var(--font-head);
+  font-size: 1.4rem;
+  font-weight: 700;
+  line-height: 1.1;
+  text-transform: uppercase;
+  letter-spacing: -0.02em;
+  margin-bottom: 0.5rem;
+}
+
+.sidebar-title {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  font-weight: 500;
+  margin-bottom: 1.5rem;
+  line-height: 1.4;
+}
+
+.sidebar-nav {
+  list-style: none;
+  margin-bottom: 2rem;
+  border-top: 1px solid var(--border-color);
+  padding-top: 1.5rem;
+}
+
+.sidebar-nav li {
+  margin-bottom: 0.75rem;
+}
+
+.sidebar-nav a {
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  transition: opacity 0.2s;
+}
+
+.sidebar-nav a:hover {
+  text-decoration: underline;
+}
+
+.sidebar-contact {
+  border-top: 1px solid var(--border-color);
+  padding-top: 1.5rem;
+  font-size: 0.8rem;
+}
+
+.sidebar-contact-item {
+  margin-bottom: 0.5rem;
+  word-break: break-all;
+}
+
+.sidebar-contact-label {
+  font-family: var(--font-mono);
+  font-weight: 700;
+  display: block;
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+}
+
+/* MAIN CONTENT */
+.main-content {
+  margin-left: 280px;
+  flex: 1;
+  padding: 2.5rem 3.5rem 4rem 3.5rem;
+  width: calc(100% - 280px);
+  transition: margin-left 0.3s ease, width 0.3s ease;
+}
+
+.app-container.sidebar-closed .main-content {
+  margin-left: 0;
+  width: 100%;
+}
+
+/* TOP UTILITY BAR */
+.top-utility-bar {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 2.5rem;
+  position: sticky;
+  top: 1rem;
+  z-index: 90;
+}
+
+.utility-icon-btn {
+  background: var(--bg-card);
+  border: 2px solid var(--border-color);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px;
+  transition: background 0.2s, transform 0.1s;
+}
+
+.utility-icon-btn:hover {
+  background: #111111;
+}
+
+.utility-icon-btn:hover svg {
+  stroke: #ffffff;
+}
+
+.utility-icon-btn svg {
+  width: 20px;
+  height: 20px;
+  stroke: var(--text-primary);
+  stroke-width: 2.2;
+}
+
+/* SEARCH OVERLAY BAR */
+.search-overlay {
+  display: none;
+  background: var(--bg-card);
+  border: 2px solid var(--border-color);
+  padding: 0.75rem 1rem;
+  margin-bottom: 2.5rem;
+  align-items: center;
+  gap: 12px;
+}
+
+.search-overlay.active {
+  display: flex;
+}
+
+.search-input {
+  width: 100%;
+  border: none;
+  outline: none;
+  font-family: var(--font-mono);
+  font-size: 0.95rem;
+  background: transparent;
+}
+
+.search-close-btn {
+  background: none;
+  border: none;
+  font-family: var(--font-mono);
+  font-weight: 700;
+  cursor: pointer;
+  font-size: 1rem;
+}
+
+mark.search-highlight {
+  background-color: #111111;
+  color: #ffffff;
+  padding: 0 4px;
+}
+
+/* ── SECTIONS & EVEN SPACING ── */
+.section {
+  margin-bottom: 3.5rem;
+  transition: opacity 0.2s ease;
+}
+
+.section.search-hidden {
+  display: none !important;
+}
+
+.section-header {
+  border-bottom: 2px solid var(--border-color);
+  padding-bottom: 0.5rem;
+  margin-bottom: 1.75rem;
+}
+
+.section-title {
+  font-family: var(--font-head);
+  font-size: 2rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: -0.02em;
+}
+
+/* NUMBERED PROJECT CARDS */
+.project-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1.75rem;
+}
+
+.project-card {
+  border: 2px solid var(--border-color);
+  background: var(--bg-card);
+  display: grid;
+  grid-template-columns: 80px 1fr;
+  transition: transform 0.2s;
+}
+
+.project-card.search-hidden {
+  display: none !important;
+}
+
+.project-card:hover {
+  transform: translate(-3px, -3px);
+  box-shadow: 4px 4px 0px var(--border-color);
+}
+
+.project-num {
+  background: var(--border-color);
+  color: var(--bg-card);
+  font-family: var(--font-mono);
+  font-size: 1.8rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.project-details {
+  padding: 1.75rem;
+}
+
+.project-title {
+  font-family: var(--font-head);
+  font-size: 1.35rem;
+  font-weight: 700;
+  margin-bottom: 0.75rem;
+}
+
+.project-desc {
+  color: var(--text-muted);
+  font-size: 0.95rem;
+  margin-bottom: 1.25rem;
+}
+
+.project-desc ul {
+  padding-left: 1.2rem;
+  margin-top: 0.5rem;
+}
+
+.project-desc li {
+  margin-bottom: 0.3rem;
+}
+
+.project-link {
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  border-bottom: 2px solid var(--border-color);
+  padding-bottom: 2px;
+}
+
+/* TABLES */
+.academic-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.academic-table tr.search-hidden {
+  display: none !important;
+}
+
+.academic-table th, .academic-table td {
+  border: 1px solid var(--border-color);
+  padding: 1rem;
+  text-align: left;
+  vertical-align: top;
+}
+
+.academic-table th {
+  background: #111111;
+  color: #ffffff;
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.academic-table td.year {
+  font-family: var(--font-mono);
+  font-weight: 700;
+  width: 160px;
+  white-space: nowrap;
+}
+
+/* TECHNICAL SKILLS GRID */
+.skills-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 1.5rem;
+}
+
+.skill-box {
+  border: 2px solid var(--border-color);
+  background: var(--bg-card);
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.skill-box.search-hidden {
+  display: none !important;
+}
+
+.skill-box-title {
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  border-bottom: 2px solid var(--border-color);
+  padding-bottom: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.skill-list {
+  list-style: none;
+}
+
+.skill-list li {
+  margin-bottom: 0.4rem;
+  font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.skill-list li::before {
+  content: "—";
+  font-family: var(--font-mono);
+  font-weight: 700;
+}
+
+/* FOOTER */
+footer {
+  border-top: 2px solid var(--border-color);
+  padding-top: 2rem;
+  margin-top: 3.5rem;
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  display: flex;
+  justify-content: space-between;
+}
+
+/* RESPONSIVE */
+@media (max-width: 900px) {
+  .app-container {
+    flex-direction: column;
+  }
+  .sidebar {
+    width: 100%;
+    min-width: 100%;
+    position: relative;
+    border-right: none;
+    border-bottom: 2px solid var(--border-color);
+    padding: 2rem;
+    transform: none !important;
+  }
+  .main-content {
+    margin-left: 0 !important;
+    width: 100% !important;
+    padding: 2rem 1.5rem;
+  }
+  .project-card {
+    grid-template-columns: 1fr;
+  }
+  .project-num {
+    padding: 0.5rem;
+  }
+}
+</style>
+</head>
+<body>
+
+<div class="app-container" id="appContainer">
+
+  <!-- LEFT SIDEBAR -->
+  <aside class="sidebar">
+    <div>
+      <div class="sidebar-profile">
+        <div class="profile-avatar">ST</div>
+        <h1 class="sidebar-name">Samay Thakur</h1>
+        <div class="sidebar-title">
+          B.E. Electronics & Instrumentation Engineering<br/>
+          M.S. Ramaiah Institute of Technology
+        </div>
+      </div>
+
+      <ul class="sidebar-nav">
+        <li><a href="#about"><span>01. ABOUT</span> <span>→</span></a></li>
+        <li><a href="#projects"><span>02. PROJECTS</span> <span>→</span></a></li>
+        <li><a href="#experience"><span>03. EXPERIENCE</span> <span>→</span></a></li>
+        <li><a href="#education"><span>04. ACADEMICS</span> <span>→</span></a></li>
+        <li><a href="#skills"><span>05. TECHNICAL SKILLS</span> <span>→</span></a></li>
+        <li><a href="#certificates"><span>06. CERTIFICATIONS</span> <span>→</span></a></li>
+        <li><a href="#leadership"><span>07. AFFILIATIONS</span> <span>→</span></a></li>
+      </ul>
+    </div>
+
+    <div class="sidebar-contact">
+      <div class="sidebar-contact-item">
+        <span class="sidebar-contact-label">Location</span>
+        Bengaluru, India
+      </div>
+      <div class="sidebar-contact-item">
+        <span class="sidebar-contact-label">Email</span>
+        <a href="mailto:samaythakur999@gmail.com" style="text-decoration: underline;">samaythakur999@gmail.com</a>
+      </div>
+      <div class="sidebar-contact-item" style="margin-top: 1rem; display: flex; gap: 10px;">
+        <a href="https://drive.google.com/file/d/168GJIams5ZMg4VBCAPK983gUYqgg9tT0/view?usp=sharing/preview" target="_blank" style="font-family: var(--font-mono); font-size: 0.75rem; font-weight: 700; border: 1px solid var(--border-color); padding: 2px 6px; background: #111111; color: #ffffff;">RESUME ↗</a>
+        <a href="https://linkedin.com/in/samaythakur" target="_blank" style="font-family: var(--font-mono); font-size: 0.75rem; font-weight: 700; border: 1px solid var(--border-color); padding: 2px 6px;">LINKEDIN ↗</a>
+        <a href="https://github.com/samaythakur" target="_blank" style="font-family: var(--font-mono); font-size: 0.75rem; font-weight: 700; border: 1px solid var(--border-color); padding: 2px 6px;">GITHUB ↗</a>
+      </div>
+    </div>
+  </aside>
+
+  <!-- MAIN CONTENT AREA -->
+  <main class="main-content" id="mainContent">
+
+    <!-- TOP UTILITY BAR -->
+    <div class="top-utility-bar">
+      <!-- Search Trigger Button -->
+      <button class="utility-icon-btn" id="searchBtn" aria-label="Search" title="Search page">
+        <svg viewBox="0 0 24 24" fill="none">
+          <circle cx="11" cy="11" r="7"/>
+          <line x1="16.5" y1="16.5" x2="22" y2="22"/>
+        </svg>
+      </button>
+
+      <!-- Sidebar Toggle Button -->
+      <button class="utility-icon-btn" id="toggleSidebarBtn" aria-label="Toggle Navigation Sidebar" title="Collapse/Expand sidebar">
+        <svg viewBox="0 0 24 24" fill="none">
+          <rect x="3" y="3" width="18" height="18" rx="5"/>
+          <line x1="12" y1="3" x2="12" y2="21"/>
+        </svg>
+      </button>
+    </div>
+
+    <!-- SEARCH OVERLAY INPUT -->
+    <div class="search-overlay" id="searchOverlay">
+      <span style="font-family: var(--font-mono); font-weight: 700; font-size: 0.85rem;">SEARCH:</span>
+      <input type="text" class="search-input" id="searchInput" placeholder="Type term (e.g. C++, Git, Udemy, CGPA, Python)..." />
+      <button class="search-close-btn" id="closeSearchBtn">✕</button>
+    </div>
+
+    <!-- 01. ABOUT -->
+    <section id="about" class="section">
+      <div class="section-header">
+        <h3 class="section-title">01. ABOUT</h3>
+      </div>
+      <p style="font-size: 1.05rem; margin-bottom: 1rem;">
+        I am Samay Thakur, an Electronics & Instrumentation Engineering undergraduate at M.S. Ramaiah Institute of Technology, Bengaluru. I’m interested in the space where technology, people, and ideas come together.
+        I like understanding why problems exist, how people experience them, and what makes a solution genuinely useful—not just technically possible. My engineering background has shaped the way I approach problems with curiosity, logic, and structure, while my interest in products has pushed me to think more deeply about users, experiences, and the decisions behind what we build.
+        I want to build things that solve real problems and create value for people.
+      </p>
+    </section>
+
+    <!-- 02. PROJECTS -->
+    <section id="projects" class="section">
+      <div class="section-header">
+        <h3 class="section-title">02. PROJECTS</h3>
+      </div>
+
+      <div class="project-list">
+        
+        <!-- Project 1 -->
+        <article class="project-card">
+          <div class="project-num">01.</div>
+          <div class="project-details">
+            <h4 class="project-title">AI-Based Bread Quality Indicator System</h4>
+            <div class="project-desc">
+              <ul>
+                <li>Developed an end-to-end food-quality assessment solution combining MQ-135 gas sensors and ESP32-CAM image capture to enable real-time bread-quality evaluation.</li>
+                <li>Built a MobileNetV2-based image classification pipeline with 128×128 preprocessing, achieving 100% validation accuracy after 15 training epochs.</li>
+                <li>Designed a Flask-based monitoring interface integrating model predictions, Wi-Fi telemetry, and automated LED/buzzer alerts for real-time user feedback.</li>
+                <li>Technologies/Tools: Python, TensorFlow, MobileNetV2, TensorFlow Lite, Flask</li>
+              </ul>
+            </div>
+            <a href="https://github.com/samaythakur/AI-Based-Bread-Quality-Indicator-System" target="_blank" class="project-link">View Source Repository ↗</a>
+          </div>
+        </article>
+
+        <!-- Project 2 -->
+        <article class="project-card">
+          <div class="project-num">02.</div>
+          <div class="project-details">
+            <h4 class="project-title">Stock Market Price Prediction & Analysis</h4>
+            <div class="project-desc">
+              <ul>
+                <li>Developed an LSTM-based forecasting solution to predict next-day NIFTY 50 price movements from historical data.</li>
+                <li>Engineered predictive features using RSI, MACD, Moving Averages, and Bollinger Bands to improve the model’s ability to capture market trends.</li>
+                <li>Achieved 1.39% MAPE and 93%+ R2 on next-day price prediction, evaluating performance against baseline forecasting models.</li>
+                <li>Technologies/Tools: Python, TensorFlow, LSTM, Pandas, NumPy, Scikit-learn</li>
+              </ul>
+            </div>
+            <a href="https://github.com/samaythakur/Stock-Market-Price-Prediction-and-Analysis-Using-Python" target="_blank" class="project-link">View Source Repository ↗</a>
+          </div>
+        </article>
+
+        <!-- Project 3 -->
+        <article class="project-card">
+          <div class="project-num">03.</div>
+          <div class="project-details">
+            <h4 class="project-title">Automatic Water Level Control System</h4>
+            <div class="project-desc">
+              <ul>
+                <li>Developed an automatic water level monitoring and pump control system using Arduino Uno and ultrasonic sensors.</li>
+                <li>Implemented threshold-based automation for pump ON/OFF control to prevent tank overflow and dry-run conditions.</li>
+                <li>Explored IoT-based smart water management concepts using ESP8266 for future remote monitoring integration.</li>
+                <li>Technologies/Tools: Arduino Uno, ESP8266, Ultrasonic Sensors, C/C++</li>
+              </ul>
+            </div>
+            <a href="https://github.com/samaythakur/Automatic-Water-Level-Control-System" target="_blank" class="project-link">View Source Repository ↗</a>
+          </div>
+        </article>
+
+      </div>
+    </section>
+
+    <!-- 03. EXPERIENCE -->
+    <section id="experience" class="section">
+      <div class="section-header">
+        <h3 class="section-title">03. EXPERIENCE</h3>
+      </div>
+
+      <table class="academic-table">
+        <thead>
+          <tr>
+            <th>Period</th>
+            <th>Role & Organization</th>
+            <th>Description & Key Technical Contributions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="year">Aug 2024</td>
+            <td>
+              <strong>Trainee - CPS & IoT Intern</strong><br/>
+              <span style="font-size: 0.85rem; color: var(--text-muted);">M.S. Ramaiah Institute of Technology</span>
+            </td>
+            <td>
+              • Developed a real-time water-level monitoring and automated pump-control system using Arduino Uno and ultrasonic sensors, implementing sensor data acquisition and threshold-based control logic in C/C++.<br/>
+              • Tested and debugged the control system under varying water-level conditions to automate pump ON/OFF operation and prevent tank overflow and dry-run conditions.
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- 04. ACADEMICS -->
+    <section id="education" class="section">
+      <div class="section-header">
+        <h3 class="section-title">04. ACADEMICS</h3>
+      </div>
+
+      <table class="academic-table">
+        <thead>
+          <tr>
+            <th>Year / Timeline</th>
+            <th>Degree / Qualification</th>
+            <th>Institution</th>
+            <th>Performance</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="year">Oct 2023 – Present</td>
+            <td>Bachelor of Engineering (B.E.) in Electronics and Instrumentation</td>
+            <td>M.S. Ramaiah Institute of Technology, Bengaluru</td>
+            <td><strong>CGPA: 7.95</strong></td>
+          </tr>
+          <tr>
+            <td class="year">2021 – 2022</td>
+            <td>Grade XII (CBSE)</td>
+            <td>Sunbeam School Varuna, Varanasi</td>
+            <td>Percentage: 74.2%</td>
+          </tr>
+          <tr>
+            <td class="year">2019 – 2020</td>
+            <td>Grade X (CBSE)</td>
+            <td>Sunbeam School Varuna, Varanasi</td>
+            <td>Percentage: 89.6%</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- 05. TECHNICAL SKILLS -->
+    <section id="skills" class="section">
+      <div class="section-header">
+        <h3 class="section-title">05. TECHNICAL SKILLS</h3>
+      </div>
+
+      <div class="skills-grid">
+        <div class="skill-box">
+          <div class="skill-box-title">Programming Languages</div>
+          <ul class="skill-list">
+            <li>Python</li>
+            <li>C++</li>
+          </ul>
+        </div>
+
+        <div class="skill-box">
+          <div class="skill-box-title">Concepts</div>
+          <ul class="skill-list">
+            <li>Data Structures</li>
+            <li>Algorithms</li>
+            <li>Compiler Design</li>
+            <li>Computer Networks</li>
+            <li>Operating Systems</li>
+            <li>Digital Logic Design</li>
+            <li>Database Management Systems</li>
+          </ul>
+        </div>
+        
+        <div class="skill-box">
+          <div class="skill-box-title">Data & Analytics</div>
+          <ul class="skill-list">
+            <li>Data Analysis</li>
+            <li>Data Visualisation</li>
+            <li>Machine Learning</li>
+          </ul>
+        </div>
+
+        <div class="skill-box">
+          <div class="skill-box-title">AI / ML</div>
+          <ul class="skill-list">
+            <li>TensorFlow & TFLite</li>
+            <li>Scikit-learn</li>
+            <li>Computer Vision</li>
+            <li>Deep Learning & LSTMs</li>
+          </ul>
+        </div>
+
+        <div class="skill-box">
+          <div class="skill-box-title">Tools & Platforms</div>
+          <ul class="skill-list">
+            <li>Flask</li>
+            <li>Git & GitHub</li>
+            <li>VS Code & Jupyter</li>
+          </ul>
+        </div>
+
+        <div class="skill-box">
+          <div class="skill-box-title">Soft Skills</div>
+          <ul class="skill-list">
+            <li>Problem Solving</li>
+            <li>Communication</li>
+            <li>Teamwork</li>
+            <li>Leadership</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- 06. CERTIFICATIONS -->
+    <section id="certificates" class="section">
+      <div class="section-header">
+        <h3 class="section-title">06. CERTIFICATIONS</h3>
+      </div>
+
+      <table class="academic-table">
+        <thead>
+          <tr>
+            <th>Date</th>
+            <th>Certificate Title</th>
+            <th>Issuing Authority</th>
+            <th>Credential Details</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="year">Jul 2026</td>
+            <td><strong>Git & GitHub - The Practical Guide</strong></td>
+            <td>Udemy</td>
+            <td>
+              <span style="font-family: var(--font-mono); font-size: 0.75rem; color: var(--text-muted); display: block; margin-bottom: 4px;">ID: UC-d708a4ac-2c94-4422-9fc0-f583b640116c</span>
+              <a href="https://www.udemy.com/certificate/UC-d708a4ac-2c94-4422-9fc0-f583b640116c/" target="_blank" style="text-decoration: underline; font-family: var(--font-mono); font-size: 0.8rem; font-weight: 700;">VERIFY CREDENTIAL ↗</a>
+            </td>
+          </tr>
+          <tr>
+            <td class="year">Jun 2026</td>
+            <td><strong>Learn C++ Programming - Beginner to Advance - Deep Dive in C++</strong></td>
+            <td>Udemy</td>
+            <td>
+              <span style="font-family: var(--font-mono); font-size: 0.75rem; color: var(--text-muted); display: block; margin-bottom: 4px;">ID: UC-85875885-9317-49a5-896c-d19e5ea16865</span>
+              <a href="https://www.udemy.com/certificate/UC-85875885-9317-49a5-896c-d19e5ea16865/" target="_blank" style="text-decoration: underline; font-family: var(--font-mono); font-size: 0.8rem; font-weight: 700;">VERIFY CREDENTIAL ↗</a>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- 07. AFFILIATIONS -->
+    <section id="leadership" class="section">
+      <div class="section-header">
+        <h3 class="section-title">07. AFFILIATIONS</h3>
+      </div>
+
+      <ul style="padding-left: 1.2rem; font-size: 1rem;">
+        <li style="margin-bottom: 0.75rem;">
+          <strong>Student Member:</strong> Instrument Society of India (ISOI), IISc Bangalore (Nov 2023 – Oct 2027).
+        </li>
+        <li style="margin-bottom: 0.75rem;">
+          <strong>Community Volunteer:</strong> Organized and supported blood-donation drives through school and community initiatives, facilitating donor engagement and community welfare.
+        </li>
+      </ul>
+    </section>
+
+    <!-- FOOTER -->
+    <footer>
+      <span>Samay Thakur — Portfolio</span>
+      <span>© 2026. All Rights Reserved.</span>
+    </footer>
+
+  </main>
+</div>
+
+<!-- INTERACTIVE SCRIPTS -->
+<script>
+// 1. Sidebar Collapse/Expand Toggle
+const appContainer = document.getElementById('appContainer');
+const toggleSidebarBtn = document.getElementById('toggleSidebarBtn');
+
+toggleSidebarBtn.addEventListener('click', () => {
+  appContainer.classList.toggle('sidebar-closed');
+});
+
+// 2. Search Toggle and Filter Logic
+const searchBtn = document.getElementById('searchBtn');
+const searchOverlay = document.getElementById('searchOverlay');
+const closeSearchBtn = document.getElementById('closeSearchBtn');
+const searchInput = document.getElementById('searchInput');
+const mainContent = document.getElementById('mainContent');
+
+searchBtn.addEventListener('click', () => {
+  searchOverlay.classList.add('active');
+  searchInput.focus();
+});
+
+closeSearchBtn.addEventListener('click', () => {
+  searchOverlay.classList.remove('active');
+  searchInput.value = '';
+  resetSearchFilter();
+});
+
+searchInput.addEventListener('input', (e) => {
+  const query = e.target.value.trim().toLowerCase();
+  
+  if (query.length < 2) {
+    resetSearchFilter();
+    return;
+  }
+
+  performSearch(query);
+});
+
+function performSearch(query) {
+  clearHighlights();
+
+  const sections = document.querySelectorAll('.section');
+  let firstMatchedSection = null;
+
+  sections.forEach(section => {
+    const sectionTitle = section.querySelector('.section-title')?.innerText.toLowerCase() || '';
+    const sectionText = section.innerText.toLowerCase();
+    
+    const matchesHeader = sectionTitle.includes(query);
+    const matchesSection = sectionText.includes(query);
+
+    const projectCards = section.querySelectorAll('.project-card');
+    projectCards.forEach(card => {
+      const cardText = card.innerText.toLowerCase();
+      if (matchesHeader || cardText.includes(query)) {
+        card.classList.remove('search-hidden');
+      } else {
+        card.classList.add('search-hidden');
+      }
+    });
+
+    const tableRows = section.querySelectorAll('.academic-table tbody tr');
+    tableRows.forEach(row => {
+      const rowText = row.innerText.toLowerCase();
+      if (matchesHeader || rowText.includes(query)) {
+        row.classList.remove('search-hidden');
+      } else {
+        row.classList.add('search-hidden');
+      }
+    });
+
+    const skillBoxes = section.querySelectorAll('.skill-box');
+    skillBoxes.forEach(box => {
+      const boxText = box.innerText.toLowerCase();
+      if (matchesHeader || boxText.includes(query)) {
+        box.classList.remove('search-hidden');
+      } else {
+        box.classList.add('search-hidden');
+      }
+    });
+
+    if (matchesHeader || matchesSection) {
+      section.classList.remove('search-hidden');
+      if (!firstMatchedSection) firstMatchedSection = section;
+      highlightMatches(section, query);
+    } else {
+      section.classList.add('search-hidden');
+    }
+  });
+
+  if (firstMatchedSection) {
+    firstMatchedSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+}
+
+function resetSearchFilter() {
+  clearHighlights();
+  document.querySelectorAll('.section, .project-card, .academic-table tbody tr, .skill-box').forEach(el => {
+    el.classList.remove('search-hidden');
+  });
+}
+
+function highlightMatches(element, query) {
+  const textNodes = getTextNodes(element);
+  textNodes.forEach(node => {
+    const parent = node.parentNode;
+    if (['SCRIPT', 'STYLE', 'INPUT', 'MARK'].includes(parent.tagName) || parent.id === 'searchOverlay') return;
+    
+    const text = node.nodeValue;
+    const lowerText = text.toLowerCase();
+    const index = lowerText.indexOf(query);
+
+    if (index !== -1) {
+      const span = document.createElement('span');
+      const before = text.substring(0, index);
+      const match = text.substring(index, index + query.length);
+      const after = text.substring(index + query.length);
+
+      span.innerHTML = `${before}<mark class="search-highlight">${match}</mark>${after}`;
+      parent.replaceChild(span, node);
+    }
+  });
+}
+
+function clearHighlights() {
+  const marks = mainContent.querySelectorAll('mark.search-highlight');
+  marks.forEach(mark => {
+    const parent = mark.parentNode;
+    parent.replaceChild(document.createTextNode(mark.textContent), mark);
+    parent.normalize();
+  });
+}
+
+function getTextNodes(element) {
+  let textNodes = [];
+  for (let node of element.childNodes) {
+    if (node.nodeType === Node.TEXT_NODE && node.nodeValue.trim() !== '') {
+      textNodes.push(node);
+    } else if (node.nodeType === Node.ELEMENT_NODE) {
+      textNodes = textNodes.concat(getTextNodes(node));
+    }
+  }
+  return textNodes;
+}
+</script>
+
+</body>
+</html>
